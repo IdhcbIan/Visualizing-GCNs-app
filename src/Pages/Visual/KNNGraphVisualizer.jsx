@@ -209,8 +209,9 @@ const KNNGraphVisualizer = ({ data, k = 5, zoom = 1 }) => {
   // Format the image filename with padded zeros
   const getImagePath = (nodeId) => {
     if (!nodeId && nodeId !== 0) return null;
-    // Pad the ID to 4 digits
-    const paddedId = String(nodeId).padStart(4, '0');
+    // Pad the ID to 4 digits, adding 1 to fix the offset issue
+    const adjustedId = nodeId + 1;
+    const paddedId = String(adjustedId).padStart(4, '0');
     return `/jpg/image_${paddedId}.jpg`;
   };
 
