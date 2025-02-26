@@ -133,18 +133,18 @@ const StyledLink = styled(Link)`
 function App() {
   const [features] = useState([
     {
-      title: "Interactive Visualization",
-      description: "Explore graph convolutional networks with intuitive, interactive visualizations that help you understand complex network structures.",
+      title: "Visualização Interativa",
+      description: "Explore grafos com visualizações intuitivas e interativas que ajudam a entender estruturas de rede complexas.",
       icon: null
     },
     {
-      title: "Advanced Analysis",
-      description: "Analyze node features, edge connections, and message passing mechanisms with detailed metrics and insights.",
+      title: "Análise Avançada",
+      description: "Configure os parametros do grafo para melhor visualizacao e analise características de nós.",
       icon: null
     },
     {
-      title: "Export & Share",
-      description: "Export your visualizations in various formats or share them directly with colleagues for collaborative research.",
+      title: "Exportar e Compartilhar",
+      description: "Exporte suas visualizações em vários formatos ou compartilhe com colegas para pesquisa colaborativa.",
       icon: null
     }
   ])
@@ -163,7 +163,7 @@ function App() {
             <Hero>
               <HeroContent>
                 <h1>GCN Visualizer</h1>
-                <p>Visualize and understand Graph Convolutional Networks</p>
+                <p>Visualize e compreenda Redes Convolucionais de Grafos</p>
               </HeroContent>
             </Hero>
           </motion.main>
