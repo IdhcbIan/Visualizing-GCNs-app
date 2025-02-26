@@ -1,0 +1,29 @@
+-> We get the rks (100 python lists) and put it into json to be sent though the api!!
+
+
+--------------------------------------------------------------------------
+
+print(len(rks[0]))
+# The error is that NumPy arrays are not JSON serializable
+# We need to convert the NumPy array to a Python list first
+import json
+try:
+    # Convert NumPy array to Python list
+    rks_list = rks.tolist()
+    json_data = json.dumps(rks_list)
+    print("Successfully converted to JSON")
+except TypeError as e:
+    print(f"Error: {e}")
+    print("NumPy arrays are not directly JSON serializable. Need to convert to list first.")
+print(json_data)
+txt_data = open("rks.txt", "w")
+
+--------------------------------------------------------------------------
+
+-> So then what we do to test the frontend is get the json data direcly and try to make the graph!!
+
+
+
+
+
+

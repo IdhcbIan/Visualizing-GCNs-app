@@ -1,8 +1,35 @@
-# React + Vite
+# Visualizing GCNs
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## CodeBase WalkThrough
 
-Currently, two official plugins are available:
+```tree
+.
+├── index.html
+├── README.md
+├── src
+│   ├── App.jsx
+│   ├── assets
+│   │   ├── ai.png
+│   │   ├── Logo.jpg
+│   │   └── NN.png
+│   ├── Legos 
+│   │   └── Small Components
+│   ├── Pages
+│   │   ├── Projects.jsx (The main view page to upload the images)
+│   │   └── Visual (The Graph Visualizer component)
+│   │       └── VisualizePage.jsx
+│   └── Router.jsx
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![Image here!!](/src/assets/Logo.jpg)
+
+Essa aplicação tem como objetivo visualizar como diferentes CNNs criam seus embedings através de um grafos de tipo KNN(K-Nearest Neighbors), trazendo este problema a uma interface interativa!!
+
+
+# Contato
+
+Entre em contato!!
+
+- Email: idhcb.ian@usp.br
+- Site: [iansmainframe.com](http://iansmainframe.com)
+

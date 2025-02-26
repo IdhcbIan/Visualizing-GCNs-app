@@ -115,7 +115,7 @@ function Header() {
     >
       <NavLinks>
         <StyledLink to="/sobre">Sobre</StyledLink>
-        <StyledLink to="/demo">Demo</StyledLink>
+        <StyledLink to="/test">Demo</StyledLink>
       </NavLinks>
       <Link to="/">
         <Logo 
