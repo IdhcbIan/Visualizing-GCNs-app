@@ -1,0 +1,15 @@
+{
+  "prod": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-visualizinggcnsapp-prod-192454-authRole",
+      "UnauthRoleArn": "arn:aws:iam::483372433724:role/amplify-visualizinggcnsapp-prod-192454-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::483372433724:role/amplify-visualizinggcnsapp-prod-192454-authRole",
+      "Region": "sa-east-1",
+      "DeploymentBucketName": "amplify-visualizinggcnsapp-prod-192454-deployment",
+      "UnauthRoleName": "amplify-visualizinggcnsapp-prod-192454-unauthRole",
+      "StackName": "amplify-visualizinggcnsapp-prod-192454",
+      "StackId": "arn:aws:cloudformation:sa-east-1:483372433724:stack/amplify-visualizinggcnsapp-prod-192454/ff1ae0c0-fba2-11ef-84eb-06331fd98999",
+      "AmplifyAppId": "d24gqv2fv1cnva"
+    }
+  }
+}
