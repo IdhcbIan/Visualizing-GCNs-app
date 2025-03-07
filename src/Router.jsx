@@ -5,6 +5,14 @@ import App from './App.jsx'
 import Projects from './Pages/Projects.jsx'
 import Renderer from './Pages/Visual/Renderer.jsx'
 import Demo from './Pages/Demo.jsx'
+
+// Import Amplify
+import { Amplify } from 'aws-amplify'
+import amplifyconfig from '../amplifyconfiguration.json'
+
+// Configure Amplify
+Amplify.configure(amplifyconfig)
+
 // ScrollToTop component to handle scrolling to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
