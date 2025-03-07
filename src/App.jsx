@@ -194,13 +194,15 @@ function App() {
                 Try It Out
               </Button>
             </StyledLink>
-            <Button 
-              className="secondary"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              See Demo
-            </Button>
+            <StyledLink to="/demo">
+              <Button 
+                className="secondary"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                See Demo
+              </Button>
+            </StyledLink>
           </ButtonContainer>
         </motion.div>
       </AnimatePresence>
