@@ -8,7 +8,7 @@ import Demo from './Pages/Demo.jsx'
 
 // Import Amplify
 import { Amplify } from 'aws-amplify'
-import amplifyconfig from '../amplifyconfiguration.json'
+import amplifyconfig from '../amplify/amplifyconfiguration.json'
 
 // Configure Amplify
 Amplify.configure(amplifyconfig)
