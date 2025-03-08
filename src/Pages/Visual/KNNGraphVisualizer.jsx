@@ -7,16 +7,17 @@ const KNNGraphVisualizer = ({ data, k = 5, zoom = 1 }) => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [debugInfo, setDebugInfo] = useState({});
   const [hoveredNode, setHoveredNode] = useState(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Add resize handler to make the visualization responsive
   useEffect(() => {
     const updateDimensions = () => {
       if (containerRef.current) {
         const { width } = containerRef.current.getBoundingClientRect();
-        // Set height proportionally or fixed
+        // Increase the height proportionally or set a larger fixed height
         setDimensions({
           width: width,
-          height: Math.min(window.innerHeight * 0.7, 600) // 70% of viewport height or max 600px
+          height: Math.min(window.innerHeight * 0.9, 800) // 90% of viewport height or max 800px
         });
       }
     };
@@ -78,10 +79,8 @@ const KNNGraphVisualizer = ({ data, k = 5, zoom = 1 }) => {
         .translate(margin.left, margin.top)
         .scale(zoom));
 
-    // IMPORTANT: Limit the number of nodes to display for performance
-    // Only use the first 100 nodes or fewer
-    const MAX_NODES = 100;
-    const limitedData = data.slice(0, MAX_NODES);
+    // Remove the node limit
+    const limitedData = data; // Use all data points
     
     setDebugInfo({
       totalDataPoints: data.length,
@@ -90,7 +89,7 @@ const KNNGraphVisualizer = ({ data, k = 5, zoom = 1 }) => {
       zoom: zoom
     });
 
-    // Create nodes for each data point in our limited dataset
+    // Create nodes for each data point in our dataset
     const nodes = limitedData.map((item, index) => ({
       id: index,
       name: `Node ${index}`,
@@ -105,11 +104,11 @@ const KNNGraphVisualizer = ({ data, k = 5, zoom = 1 }) => {
       
       // Connect to k nearest neighbors (or fewer if not enough rankings)
       for (let i = 1; i <= Math.min(k, rankings.length - 1); i++) {
-        // Find the target node index in our limited dataset
+        // Find the target node index in our dataset
         const targetOriginalId = rankings[i];
         const targetIndex = limitedData.findIndex(item => item[0] === targetOriginalId);
         
-        // Only create the link if the target is in our limited dataset
+        // Only create the link if the target is in our dataset
         if (targetIndex !== -1) {
           links.push({
             source: sourceIndex,
@@ -129,10 +128,14 @@ const KNNGraphVisualizer = ({ data, k = 5, zoom = 1 }) => {
 
     // Set up force simulation
     const simulation = d3.forceSimulation(nodes)
-      .force("link", d3.forceLink(links).id(d => d.id).distance(100))
+      .force("link", d3.forceLink(links).id(d => d.id).distance(300))
       .force("charge", d3.forceManyBody().strength(-300))
       .force("center", d3.forceCenter(innerWidth / 2, innerHeight / 2))
-      .force("collision", d3.forceCollide().radius(30));
+      .force("collision", d3.forceCollide().radius(20))
+      .stop(); // Stop the simulation immediately
+
+    // Run the simulation for a fixed number of iterations
+    simulation.tick(150); // Reduce the number of ticks
 
     // Draw links
     const link = g.append("g")
@@ -174,17 +177,15 @@ const KNNGraphVisualizer = ({ data, k = 5, zoom = 1 }) => {
     node.append("title")
       .text(d => `Node ${d.id} (Original ID: ${d.originalId})`);
 
-    // Update positions on each tick
-    simulation.on("tick", () => {
-      link
-        .attr("x1", d => d.source.x)
-        .attr("y1", d => d.source.y)
-        .attr("x2", d => d.target.x)
-        .attr("y2", d => d.target.y);
+    // Set initial positions
+    link
+      .attr("x1", d => d.source.x)
+      .attr("y1", d => d.source.y)
+      .attr("x2", d => d.target.x)
+      .attr("y2", d => d.target.y);
 
-      node
-        .attr("transform", d => `translate(${d.x},${d.y})`);
-    });
+    node
+      .attr("transform", d => `translate(${d.x},${d.y})`);
 
     // Drag functions
     function dragstarted(event, d) {
@@ -215,10 +216,32 @@ const KNNGraphVisualizer = ({ data, k = 5, zoom = 1 }) => {
     return `/jpg/image_${paddedId}.jpg`;
   };
 
+  // Function to toggle fullscreen
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current.requestFullscreen().then(() => setIsFullscreen(true));
+    } else {
+      document.exitFullscreen().then(() => setIsFullscreen(false));
+    }
+  };
+
   return (
-    <div className="knn-graph-container" ref={containerRef} style={{ width: '100%', padding: '10px' }}>
+    <div
+      className="knn-graph-container"
+      ref={containerRef}
+      style={{
+        width: '100%',
+        height: '100%',
+        padding: '10px',
+        position: isFullscreen ? 'fixed' : 'relative',
+        top: isFullscreen ? '0' : 'auto',
+        left: isFullscreen ? '0' : 'auto',
+        zIndex: isFullscreen ? 1000 : 'auto',
+        backgroundColor: isFullscreen ? 'white' : 'transparent',
+      }}
+    >
       <h2>KNN Graph Visualization (k={k})</h2>
-      <div style={{ border: '1px solid #ddd', borderRadius: '5px', overflow: 'hidden', position: 'relative' }}>
+      <div style={{ border: '1px solid #ddd', borderRadius: '5px', overflow: 'hidden', position: 'relative', height: '100%' }}>
         <svg ref={svgRef}></svg>
         
         {/* Image preview on hover */}
@@ -251,16 +274,21 @@ const KNNGraphVisualizer = ({ data, k = 5, zoom = 1 }) => {
             />
           </div>
         )}
-      </div>
-      
-      <div style={{ marginTop: '10px', fontSize: '0.9em', color: '#666' }}>
-        <p>Use mouse wheel to zoom in/out. Click and drag to pan the view. Hover over nodes to see images.</p>
-      </div>
-      
-      {/* Debug information */}
-      <div className="debug-info" style={{marginTop: '20px', padding: '10px', backgroundColor: '#f5f5f5', borderRadius: '5px'}}>
-        <h3>Debug Information</h3>
-        <pre>{JSON.stringify({...debugInfo, dimensions, hoveredNode: hoveredNode?.originalId}, null, 2)}</pre>
+
+        {/* Fullscreen toggle */}
+        <button onClick={toggleFullscreen} style={{
+          position: 'absolute',
+          top: '10px',
+          right: '10px',
+          padding: '5px',
+          cursor: 'pointer',
+          background: 'rgba(255, 255, 255, 0.8)',
+          border: '1px solid #ccc',
+          borderRadius: '5px',
+          boxShadow: '0 0 5px rgba(0,0,0,0.2)'
+        }}>
+          {isFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+        </button>
       </div>
     </div>
   );
