@@ -5,6 +5,7 @@ import App from './App.jsx'
 import Projects from './Pages/Projects.jsx'
 import Renderer from './Pages/Visual/Renderer.jsx'
 import Demo from './Pages/Demo.jsx'
+import Login from './Pages/Login.jsx'
 
 // Import Amplify
 import { Amplify } from 'aws-amplify'
