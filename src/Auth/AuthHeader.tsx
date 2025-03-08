@@ -1,10 +1,54 @@
 import { 
   Button,
-  useAuthenticator,
-  View,
-  Text
+  useAuthenticator
 } from '@aws-amplify/ui-react';
 import React from 'react';
+import styled from 'styled-components';
+
+const HeaderContainer = styled.header`
+  padding: 1rem;
+  background-color: #2a3b4c;
+  width: 100%;
+  border-bottom: 1px solid rgba(66, 135, 245, 0.3);
+`;
+
+const HeaderContent = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const AppTitle = styled.h1`
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+`;
+
+const UserSection = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const WelcomeText = styled.span`
+  color: white;
+`;
+
+const StyledButton = styled(Button)`
+  background-color: #068743;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: #056935;
+    transform: translateY(-1px);
+  }
+`;
 
 interface AuthHeaderProps {}
 
@@ -16,20 +60,20 @@ export const AuthHeader: React.FC<AuthHeaderProps> = () => {
   ]);
   
   return (
-    <View as="header" padding="1rem" backgroundColor="#f0f0f0" width="100%">
-      <View display="flex" justifyContent="space-between" alignItems="center">
-        <Text fontSize="1.2rem" fontWeight="bold">My App</Text>
+    <HeaderContainer>
+      <HeaderContent>
+        <AppTitle></AppTitle>
         
         {user ? (
-          <View display="flex" alignItems="center" gap="1rem">
-            <Text>Welcome, {user.username || (user.attributes && user.attributes.email) || 'User'}</Text>
-            <Button variation="primary" size="small" onClick={() => signOut()}>Sign Out</Button>
-          </View>
+          <UserSection>
+            <WelcomeText>Welcome, {user.username || (user.attributes && user.attributes.email) || 'User'}</WelcomeText>
+            <StyledButton onClick={() => signOut()}>Sign Out</StyledButton>
+          </UserSection>
         ) : (
-          <Button variation="primary" size="small" onClick={() => toSignIn()}>Sign In</Button>
+          <StyledButton onClick={() => toSignIn()}>Sign In</StyledButton>
         )}
-      </View>
-    </View>
+      </HeaderContent>
+    </HeaderContainer>
   );
 };
 

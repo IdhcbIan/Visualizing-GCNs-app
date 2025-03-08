@@ -9,6 +9,9 @@ import Demo from './Pages/Demo.jsx'
 // Import Amplify
 import { Amplify } from 'aws-amplify'
 import amplifyconfig from '../amplify/amplifyconfiguration.json'
+// Import Authenticator Provider
+import { Authenticator } from '@aws-amplify/ui-react'
+import '@aws-amplify/ui-react/styles.css'
 
 // Configure Amplify
 Amplify.configure(amplifyconfig)
@@ -26,14 +29,17 @@ function ScrollToTop() {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<App />} />
-        <Route path="/projects" element={<Projects />} />
-        <Route path="/demo" element={<Demo />} />
-        <Route path="/visual" element={<Renderer />} />
-      </Routes>
-    </BrowserRouter>
+    {/* Wrap the entire app with Authenticator.Provider */}
+    <Authenticator.Provider>
+      <BrowserRouter>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<App />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/demo" element={<Demo />} />
+          <Route path="/visual" element={<Renderer />} />
+        </Routes>
+      </BrowserRouter>
+    </Authenticator.Provider>
   </StrictMode>,
 )

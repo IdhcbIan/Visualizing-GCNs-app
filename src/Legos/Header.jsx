@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom'
 import LogoImg from '/src/assets/Logo.jpg'
 import { FaGithub } from 'react-icons/fa'
 import { motion } from 'framer-motion'
-import { useAuthenticator, Button } from '@aws-amplify/ui-react'
+import AuthHeader from '../Auth/AuthHeader'
+import { Button } from '@aws-amplify/ui-react'
 
 const seaGreen = '#068743';
 
@@ -142,13 +143,6 @@ const AuthButton = styled(Button)`
 `
 
 function Header() {
-  // Use the Amplify useAuthenticator hook
-  const { user, signOut, toSignIn } = useAuthenticator((context) => [
-    context.user,
-    context.signOut,
-    context.toSignIn
-  ]);
-
   return (
     <Nav
       initial={{ opacity: 0, y: -20 }}
@@ -167,17 +161,7 @@ function Header() {
         />
       </Link>
       <SocialLinks>
-        {/* Auth section */}
-        <AuthContainer>
-          {user ? (
-            <>
-              <WelcomeText>Hello, {user.username || (user.attributes && user.attributes.email) || 'User'}</WelcomeText>
-              <AuthButton size="small" onClick={() => signOut()}>Sign Out</AuthButton>
-            </>
-          ) : (
-            <AuthButton size="small" onClick={() => toSignIn()}>Sign In</AuthButton>
-          )}
-        </AuthContainer>
+        <AuthHeader />
         
         <SocialIcon 
           href="https://github.com" 
