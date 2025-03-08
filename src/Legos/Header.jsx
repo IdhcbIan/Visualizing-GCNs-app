@@ -3,10 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import LogoImg from '/src/assets/Logo.jpg'
 import { FaGithub } from 'react-icons/fa'
 import { motion } from 'framer-motion'
-import { Button } from '@aws-amplify/ui-react'
-import { Amplify } from 'aws-amplify'
-import { signInWithRedirect } from 'aws-amplify/auth'
-import outputs from '../../amplify_outputs.json'  // Adjust the path as needed
+import { Button, useAuthenticator } from '@aws-amplify/ui-react'
+import LoggedInUser from '../Auth/Loged'
 import { useState, useEffect } from 'react'
 
 const seaGreen = '#068743';
@@ -112,19 +110,6 @@ const ContactInfo = styled.div`
   }
 `
 
-const AuthContainer = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-right: 1rem;
-`
-
-const WelcomeText = styled.span`
-  color: white;
-  font-size: 0.9rem;
-  font-weight: 500;
-`
-
 const AuthButton = styled(Button)`
   background-color: #4287f5 !important;
   border: none !important;
@@ -143,10 +128,11 @@ const AuthButton = styled(Button)`
   &:active {
     transform: translateY(1px) !important;
   }
-`
+`;
 
 function Header() {
   const navigate = useNavigate();
+  const { user } = useAuthenticator((context) => [context.user]);
   
   const handleSignIn = () => {
     navigate('/login');
@@ -170,7 +156,11 @@ function Header() {
         />
       </Link>
       <SocialLinks>
-        <AuthButton size="small" onClick={handleSignIn}>Sign In</AuthButton>
+        {user ? (
+          <LoggedInUser />
+        ) : (
+          <AuthButton size="small" onClick={handleSignIn}>Sign In</AuthButton>
+        )}
         
         <SocialIcon 
           href="https://github.com" 
