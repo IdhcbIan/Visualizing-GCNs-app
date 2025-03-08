@@ -3,12 +3,8 @@ import {
   useAuthenticator,
   View
 } from '@aws-amplify/ui-react';
-import { Amplify } from 'aws-amplify';
-import outputs from '../../amplify_outputs.json';
 import '@aws-amplify/ui-react/styles.css';
 import React from 'react';
-
-Amplify.configure(outputs);
 
 interface PageProps {
   Component: React.ComponentType<any>;

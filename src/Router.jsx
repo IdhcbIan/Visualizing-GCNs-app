@@ -14,8 +14,15 @@ import amplifyconfig from '../amplify/amplifyconfiguration.json'
 import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
 
-// Configure Amplify
-Amplify.configure(amplifyconfig)
+// Configure Amplify with explicit auth configuration
+Amplify.configure({
+  ...amplifyconfig,
+  Auth: {
+    region: amplifyconfig.aws_cognito_region,
+    userPoolId: amplifyconfig.aws_user_pools_id,
+    userPoolWebClientId: amplifyconfig.aws_user_pools_web_client_id
+  }
+});
 
 // ScrollToTop component to handle scrolling to top on route change
 function ScrollToTop() {

@@ -9,9 +9,6 @@ import { signInWithRedirect } from 'aws-amplify/auth'
 import outputs from '../../amplify_outputs.json'  // Adjust the path as needed
 import { useState, useEffect } from 'react'
 
-// Configure Amplify
-Amplify.configure(outputs);
-
 const seaGreen = '#068743';
 
 const Nav = styled(motion.nav)`
@@ -152,7 +149,6 @@ function Header() {
   const navigate = useNavigate();
   
   const handleSignIn = () => {
-    // Navigate to the login page
     navigate('/login');
   };
 
