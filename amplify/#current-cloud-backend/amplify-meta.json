@@ -1,0 +1,77 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-visualizinggcnsapp-prod-192454-authRole",
+      "UnauthRoleArn": "arn:aws:iam::483372433724:role/amplify-visualizinggcnsapp-prod-192454-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::483372433724:role/amplify-visualizinggcnsapp-prod-192454-authRole",
+      "Region": "sa-east-1",
+      "DeploymentBucketName": "amplify-visualizinggcnsapp-prod-192454-deployment",
+      "UnauthRoleName": "amplify-visualizinggcnsapp-prod-192454-unauthRole",
+      "StackName": "amplify-visualizinggcnsapp-prod-192454",
+      "StackId": "arn:aws:cloudformation:sa-east-1:483372433724:stack/amplify-visualizinggcnsapp-prod-192454/ff1ae0c0-fba2-11ef-84eb-06331fd98999",
+      "AmplifyAppId": "d24gqv2fv1cnva"
+    }
+  },
+  "auth": {
+    "VisualizingGCNsapp": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_NUMBERS",
+            "REQUIRES_UPPERCASE"
+          ]
+        },
+        "signupAttributes": [],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito",
+      "output": {
+        "UserPoolId": "sa-east-1_pvu7HoIPo",
+        "AppClientIDWeb": "6v48gj2kn2o1ho5uht5nj4d91",
+        "AppClientID": "2075j4cg7vjt6p40schsv9k0lt",
+        "IdentityPoolId": "sa-east-1:874116dc-74d6-4063-97bb-8f2d1921bef4",
+        "UserPoolArn": "arn:aws:cognito-idp:sa-east-1:483372433724:userpool/sa-east-1_pvu7HoIPo",
+        "IdentityPoolName": "testAuthIdentityPool__prod",
+        "UserPoolName": "VisualizingGCNsapp"
+      },
+      "lastPushTimeStamp": "2025-03-08T12:22:52.869Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-visualizinggcnsapp-prod-192454-deployment/amplify-cfn-templates/auth/VisualizingGCNsapp-cloudformation-template.json",
+        "logicalId": "authVisualizingGCNsapp"
+      },
+      "lastPushDirHash": "s4q31xa5MJNkbq/KytDpSd1hCk4="
+    }
+  },
+  "storage": {
+    "s3visualizinggcnsappstorage": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "lastPushTimeStamp": "2025-03-08T12:22:52.869Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-visualizinggcnsapp-prod-192454-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "logicalId": "storages3visualizinggcnsappstorage"
+      },
+      "output": {
+        "BucketName": "visualizinggcnsapp-storage192454-prod",
+        "Region": "sa-east-1"
+      },
+      "lastPushDirHash": "+KA+UZuKRaDWPn5xOcnMGrh93h0="
+    }
+  }
+}
