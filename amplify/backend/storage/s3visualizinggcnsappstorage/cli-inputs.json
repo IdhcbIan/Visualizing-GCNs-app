@@ -1,0 +1,13 @@
+{
+  "resourceName": "s3visualizinggcnsappstorage",
+  "bucketName": "visualizinggcnsapp-storage",
+  "policyUUID": "ae446c80",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ"
+  ]
+}

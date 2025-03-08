@@ -1,10 +1,16 @@
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import LogoImg from '/src/assets/Logo.jpg'
 import { FaGithub } from 'react-icons/fa'
 import { motion } from 'framer-motion'
-import AuthHeader from '../Auth/AuthHeader'
 import { Button } from '@aws-amplify/ui-react'
+import { Amplify } from 'aws-amplify'
+import { signInWithRedirect } from 'aws-amplify/auth'
+import outputs from '../../amplify_outputs.json'  // Adjust the path as needed
+import { useState, useEffect } from 'react'
+
+// Configure Amplify
+Amplify.configure(outputs);
 
 const seaGreen = '#068743';
 
@@ -143,6 +149,13 @@ const AuthButton = styled(Button)`
 `
 
 function Header() {
+  const navigate = useNavigate();
+  
+  const handleSignIn = () => {
+    // Redirect to the login page
+    navigate('/login');
+  };
+
   return (
     <Nav
       initial={{ opacity: 0, y: -20 }}
@@ -161,7 +174,7 @@ function Header() {
         />
       </Link>
       <SocialLinks>
-        <AuthHeader />
+        <AuthButton size="small" onClick={handleSignIn}>Sign In</AuthButton>
         
         <SocialIcon 
           href="https://github.com" 

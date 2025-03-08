@@ -29,7 +29,6 @@ function ScrollToTop() {
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {/* Wrap the entire app with Authenticator.Provider */}
     <Authenticator.Provider>
       <BrowserRouter>
         <ScrollToTop />
@@ -38,6 +37,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/projects" element={<Projects />} />
           <Route path="/demo" element={<Demo />} />
           <Route path="/visual" element={<Renderer />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </Authenticator.Provider>
