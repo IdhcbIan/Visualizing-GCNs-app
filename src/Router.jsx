@@ -11,7 +11,7 @@ import Login from './Pages/Login.jsx'
 import { Amplify } from 'aws-amplify'
 import amplifyconfig from '../amplify/amplifyconfiguration.json'
 // Import Authenticator Provider
-import { Authenticator } from '@aws-amplify/ui-react'
+import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
 
 // Configure Amplify

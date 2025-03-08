@@ -152,7 +152,7 @@ function Header() {
   const navigate = useNavigate();
   
   const handleSignIn = () => {
-    // Redirect to the login page
+    // Navigate to the login page
     navigate('/login');
   };
 
