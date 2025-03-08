@@ -12,16 +12,19 @@ import Profile from './Auth/Profile.jsx'
 import { Amplify } from 'aws-amplify'
 import amplifyconfig from '../amplify/amplifyconfiguration.json'
 // Import Authenticator Provider
-import { Authenticator, useAuthenticator } from '@aws-amplify/ui-react'
+import { Authenticator } from '@aws-amplify/ui-react'
 import '@aws-amplify/ui-react/styles.css'
 
-// Configure Amplify with explicit auth configuration
+// Configure Amplify with the correct configuration
 Amplify.configure({
   ...amplifyconfig,
+  // Make sure we're using the correct authentication configuration
   Auth: {
-    region: amplifyconfig.aws_cognito_region,
-    userPoolId: amplifyconfig.aws_user_pools_id,
-    userPoolWebClientId: amplifyconfig.aws_user_pools_web_client_id
+    Cognito: {
+      userPoolId: amplifyconfig.aws_user_pools_id,
+      userPoolClientId: amplifyconfig.aws_user_pools_web_client_id,
+      region: amplifyconfig.aws_cognito_region
+    }
   }
 });
 
