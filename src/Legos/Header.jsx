@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import LogoImg from '/src/assets/Logo.jpg'
 import { FaGithub } from 'react-icons/fa'
 import { motion } from 'framer-motion'
+import { useAuthenticator, Button } from '@aws-amplify/ui-react'
 
 const seaGreen = '#068743';
 
@@ -43,6 +44,7 @@ const SocialLinks = styled.div`
   gap: 1.5rem;
   order: 3;
   margin-left: auto;
+  align-items: center;
 `
 
 const SocialIcon = styled(motion.a)`
@@ -106,7 +108,47 @@ const ContactInfo = styled.div`
   }
 `
 
+const AuthContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-right: 1rem;
+`
+
+const WelcomeText = styled.span`
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 500;
+`
+
+const AuthButton = styled(Button)`
+  background-color: #4287f5 !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600 !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 8px !important;
+  transition: all 0.3s ease !important;
+  
+  &:hover {
+    background-color: #3a76d8 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(66, 135, 245, 0.3) !important;
+  }
+  
+  &:active {
+    transform: translateY(1px) !important;
+  }
+`
+
 function Header() {
+  // Use the Amplify useAuthenticator hook
+  const { user, signOut, toSignIn } = useAuthenticator((context) => [
+    context.user,
+    context.signOut,
+    context.toSignIn
+  ]);
+
   return (
     <Nav
       initial={{ opacity: 0, y: -20 }}
@@ -125,6 +167,18 @@ function Header() {
         />
       </Link>
       <SocialLinks>
+        {/* Auth section */}
+        <AuthContainer>
+          {user ? (
+            <>
+              <WelcomeText>Hello, {user.username || (user.attributes && user.attributes.email) || 'User'}</WelcomeText>
+              <AuthButton size="small" onClick={() => signOut()}>Sign Out</AuthButton>
+            </>
+          ) : (
+            <AuthButton size="small" onClick={() => toSignIn()}>Sign In</AuthButton>
+          )}
+        </AuthContainer>
+        
         <SocialIcon 
           href="https://github.com" 
           target="_blank" 

@@ -10,6 +10,11 @@
       "StackName": "amplify-visualizinggcnsapp-prod-192454",
       "StackId": "arn:aws:cloudformation:sa-east-1:483372433724:stack/amplify-visualizinggcnsapp-prod-192454/ff1ae0c0-fba2-11ef-84eb-06331fd98999",
       "AmplifyAppId": "d24gqv2fv1cnva"
+    },
+    "categories": {
+      "auth": {
+        "VisualizingGCNsapp": {}
+      }
     }
   }
 }
