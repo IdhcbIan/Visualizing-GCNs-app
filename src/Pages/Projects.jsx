@@ -164,6 +164,11 @@ const ImagePreviewContainer = styled.div`
   }
 `
 
+const isProduction = window.location.hostname.includes('amplifyapp.com');
+const baseApiUrl = isProduction 
+  ? 'https://nvlqzt2dsb.execute-api.sa-east-1.amazonaws.com/main/api' 
+  : 'http://15.228.252.194:5000/api';
+
 function App() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -173,7 +178,7 @@ function App() {
 
   const fetchFlowerPreviews = async () => {
     try {
-      const response = await fetch('http://15.228.252.194:5000/api/files/flowers-preview', {
+      const response = await fetch(`${baseApiUrl}/files/flowers-preview`, {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -184,7 +189,6 @@ function App() {
       const data = await response.json();
       
       if (data.status === 'success') {
-        // Now data.images contains direct URLs to the images
         setPreviewImages(data.images);
         console.log('Preview image URLs:', data.images);
       } else {
@@ -199,7 +203,7 @@ function App() {
 
   const fetchProjectsInfo = async () => {
     try {
-      const apiUrl = 'http://15.228.252.194:5000/api/files/info?requesttype=1';
+      const apiUrl = `${baseApiUrl}/files/info?requesttype=1`;
       console.log('Fetching from API:', apiUrl);
       
       const response = await fetch(apiUrl, {
@@ -219,34 +223,27 @@ function App() {
         throw new Error(`HTTP error! status: ${response.status}, response: ${text}`);
       }
       
-      try {
-        const jsonData = JSON.parse(text);
-        console.log('Parsed JSON data:', jsonData);
-        
-        // Handle different possible data structures
+      const jsonData = JSON.parse(text);
+      console.log('Parsed JSON data:', jsonData);
+      
+      if (jsonData.status === 'success') {
         let projectsData;
-        if (jsonData.status === 'success') {
-          if (Array.isArray(jsonData.data)) {
-            projectsData = jsonData.data;
-          } else if (jsonData.data && Array.isArray(jsonData.data.projects)) {
-            projectsData = jsonData.data.projects;
-          } else if (jsonData.data && typeof jsonData.data === 'object') {
-            // If data is an object, convert it to array
-            projectsData = [jsonData.data];
-          } else {
-            projectsData = [];
-          }
-          
-          console.log('Final projects data:', projectsData);
-          setProjects(projectsData);
-          setError(null);
-          setErrorDetails('');
+        if (Array.isArray(jsonData.data)) {
+          projectsData = jsonData.data;
+        } else if (jsonData.data && Array.isArray(jsonData.data.projects)) {
+          projectsData = jsonData.data.projects;
+        } else if (jsonData.data && typeof jsonData.data === 'object') {
+          projectsData = [jsonData.data];
         } else {
-          throw new Error(`API returned error status: ${jsonData.message || 'Unknown error'}`);
+          projectsData = [];
         }
-      } catch (parseError) {
-        console.error('JSON Parse Error:', parseError);
-        throw new Error(`Failed to parse JSON: ${parseError.message}`);
+        
+        console.log('Final projects data:', projectsData);
+        setProjects(projectsData);
+        setError(null);
+        setErrorDetails('');
+      } else {
+        throw new Error(`API returned error status: ${jsonData.message || 'Unknown error'}`);
       }
     } catch (err) {
       console.error('Error in fetchProjectsInfo:', err);
@@ -298,15 +295,6 @@ function App() {
           <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
             <p>{error}</p>
             <p style={{ fontSize: '0.9rem', color: '#666' }}>{errorDetails}</p>
-            {responseText && (
-              <div style={{ marginTop: '20px', textAlign: 'left', maxHeight: '200px', overflow: 'auto', background: '#f5f5f5', padding: '10px', borderRadius: '5px' }}>
-                <p style={{ fontWeight: 'bold' }}>Response received:</p>
-                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-                  {responseText.substring(0, 500)}
-                  {responseText.length > 500 ? '...' : ''}
-                </pre>
-              </div>
-            )}
             <p style={{ marginTop: '20px' }}>
               Verifique se o arquivo info.json está disponível no bucket S3 do Amplify.
             </p>
@@ -322,7 +310,7 @@ function App() {
     
     // Create an array of 3 image URLs for this project
     const previewImages = [0, 1, 2].map(imgIndex => 
-      `http://15.228.252.194:5000/api/files/image/${directory}/${imgIndex}`
+      `${baseApiUrl}/files/image/${directory}/${imgIndex}`
     );
     
     return {
