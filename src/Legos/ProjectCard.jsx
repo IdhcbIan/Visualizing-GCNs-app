@@ -1,14 +1,16 @@
-import { motion } from 'framer-motion';
+import React from 'react';
 import styled from 'styled-components';
+import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 const Card = styled(motion.div)`
-  display: flex;
   background-color: white;
   border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
-  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: row;
   
   @media (max-width: 768px) {
     flex-direction: column;
@@ -16,65 +18,115 @@ const Card = styled(motion.div)`
 `;
 
 const ImageContainer = styled.div`
-  flex: 0 0 40%;
+  flex: 1;
+  min-width: 300px;
+  position: relative;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; // Three equal columns
+  gap: 8px;
   
   img {
     width: 100%;
-    height: 100%;
+    height: 150px;
     object-fit: cover;
+    border-radius: 4px;
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
   }
   
   @media (max-width: 768px) {
-    height: 200px;
+    min-width: 100%;
+    grid-template-columns: 1fr 1fr 1fr; // Maintain three columns on mobile
+    gap: 4px; // Smaller gap on mobile
+    padding: 8px;
+    
+    img {
+      height: 100px; // Smaller height on mobile
+    }
   }
 `;
 
 const ContentContainer = styled.div`
-  flex: 1;
+  flex: 2;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
 `;
 
 const Title = styled.h3`
-  font-size: 1.5rem;
+  color: #2a3b4c;
+  font-size: 1.8rem;
   margin-top: 0;
   margin-bottom: 0.5rem;
-  color: #2a3b4c;
   font-family: 'Unna', serif;
 `;
 
 const Description = styled.p`
   color: #4a5568;
   line-height: 1.6;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 `;
 
 const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: #4287f5;
-  font-weight: 600;
-  margin-top: auto;
   align-self: flex-start;
+  padding: 0.6rem 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Unna', serif;
+  background-color: #4287f5;
+  color: white;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
   
   &:hover {
-    text-decoration: underline;
+    transform: translateY(-2px);
   }
 `;
 
-const ProjectCard = ({ title, description, imageUrl, linkTo, linkText }) => {
+const OwnerInfo = styled.div`
+  margin-top: auto;
+  color: #718096;
+  font-size: 0.9rem;
+`;
+
+const ProjectCard = ({ title, description, imageUrls = [], linkTo, linkText, owner, users }) => {
+  // Ensure we have at least 3 image URLs, use the first one as fallback
+  const safeImageUrls = imageUrls.length >= 3 
+    ? imageUrls 
+    : [imageUrls[0] || '', imageUrls[0] || '', imageUrls[0] || ''];
+  
   return (
     <Card
       whileHover={{ y: -5 }}
       transition={{ duration: 0.3 }}
     >
       <ImageContainer>
-        <img src={imageUrl} alt={title} />
+        {safeImageUrls.map((url, index) => (
+          <img 
+            key={`preview-${index}`}
+            src={url}
+            alt={`Preview ${index + 1} for ${title}`}
+          />
+        ))}
       </ImageContainer>
       <ContentContainer>
         <Title>{title}</Title>
         <Description>{description}</Description>
-        <StyledLink to={linkTo}>{linkText || 'Learn More'}</StyledLink>
+        <StyledLink to={linkTo}>{linkText}</StyledLink>
+        <OwnerInfo>
+          <p>Criado por: {owner}</p>
+          {users && users.length > 0 && (
+            <p>Colaboradores: {users.join(', ')}</p>
+          )}
+        </OwnerInfo>
       </ContentContainer>
     </Card>
   );

@@ -15,7 +15,7 @@
       "region": "sa-east-1"
     }
   ],
-  "aws_content_delivery_bucket": "",
+  "aws_content_delivery_bucket": "visualizinggcnsapp-storage192454-prod",
   "aws_content_delivery_bucket_region": "sa-east-1",
   "aws_content_delivery_url": "",
   "aws_sdk": {

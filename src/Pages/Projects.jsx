@@ -1,8 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 import { motion, AnimatePresence } from 'framer-motion'
 import Header from '../Legos/Header'
 import ProjectCard from '../Legos/ProjectCard'
+import { Amplify } from 'aws-amplify'
+import { fetchAuthSession } from 'aws-amplify/auth'
+import { getUrl } from 'aws-amplify/storage'
+import awsExports from '../aws-exports.cjs'
+import { S3Client, GetObjectCommand } from '@aws-sdk/client-s3'
+
+// Make sure we have a valid configuration object
+const awsConfig = awsExports.default || awsExports;
+
+// Configure Amplify with your AWS exports
+Amplify.configure(awsConfig);
 
 const GlobalStyle = createGlobalStyle`
   // ... existing code ...
@@ -138,30 +149,192 @@ const ProjectsContainer = styled.section`
   }
 `
 
+// Add a new styled component for the image preview container
+const ImagePreviewContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  
+  img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+`
+
 function App() {
-  const projects = [
-    {
-      title: "Espécies de Flores",
-      description: "Classificação de Espécies de Flores",
-      imageUrl: "/images/flower-species.jpg",
-      linkTo: "/projects/flower-species",
-      linkText: "Explorar Projeto"
-    },
-    {
-      title: "Espécies de Plantas",
-      description: "Classificação de Espécies de Plantas",
-      imageUrl: "/images/plant-species.jpg",
-      linkTo: "/projects/plant-species",
-      linkText: "Ver Detalhes"
-    },
-    {
-      title: "Modelos de Aviões",
-      description: "Classificação de Modelos de Aviões",
-      imageUrl: "/images/airplane-model.jpg",
-      linkTo: "/projects/airplane-model",
-      linkText: "Ver Demonstração"
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [errorDetails, setErrorDetails] = useState('');
+  const [previewImages, setPreviewImages] = useState([]);
+
+  const fetchFlowerPreviews = async () => {
+    try {
+      const response = await fetch('http://15.228.252.194:5000/api/files/flowers-preview', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+        },
+        mode: 'cors',
+      });
+
+      const data = await response.json();
+      
+      if (data.status === 'success') {
+        // Now data.images contains direct URLs to the images
+        setPreviewImages(data.images);
+        console.log('Preview image URLs:', data.images);
+      } else {
+        console.log('No preview images found');
+        setPreviewImages([]);
+      }
+    } catch (error) {
+      console.error('Error fetching flower previews:', error);
+      setPreviewImages([]);
     }
-  ]
+  };
+
+  const fetchProjectsInfo = async () => {
+    try {
+      const apiUrl = 'http://15.228.252.194:5000/api/files/info?requesttype=1';
+      console.log('Fetching from API:', apiUrl);
+      
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        mode: 'cors',
+        cache: 'no-cache'
+      });
+      
+      const text = await response.text();
+      console.log('Raw API Response:', text);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}, response: ${text}`);
+      }
+      
+      try {
+        const jsonData = JSON.parse(text);
+        console.log('Parsed JSON data:', jsonData);
+        
+        // Handle different possible data structures
+        let projectsData;
+        if (jsonData.status === 'success') {
+          if (Array.isArray(jsonData.data)) {
+            projectsData = jsonData.data;
+          } else if (jsonData.data && Array.isArray(jsonData.data.projects)) {
+            projectsData = jsonData.data.projects;
+          } else if (jsonData.data && typeof jsonData.data === 'object') {
+            // If data is an object, convert it to array
+            projectsData = [jsonData.data];
+          } else {
+            projectsData = [];
+          }
+          
+          console.log('Final projects data:', projectsData);
+          setProjects(projectsData);
+          setError(null);
+          setErrorDetails('');
+        } else {
+          throw new Error(`API returned error status: ${jsonData.message || 'Unknown error'}`);
+        }
+      } catch (parseError) {
+        console.error('JSON Parse Error:', parseError);
+        throw new Error(`Failed to parse JSON: ${parseError.message}`);
+      }
+    } catch (err) {
+      console.error('Error in fetchProjectsInfo:', err);
+      setError('Failed to load projects');
+      setErrorDetails(`Error details: ${err.message}`);
+      setProjects([]);
+    }
+  };
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      try {
+        // First try to fetch projects
+        await fetchProjectsInfo();
+        // Only fetch previews if projects fetch was successful
+        if (!error) {
+          await fetchFlowerPreviews();
+        }
+      } catch (err) {
+        console.error('Error in loadData:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
+
+  if (loading) {
+    return (
+      <>
+        <GlobalStyle />
+        <Header />
+        <Hero>
+          <PageTitle>Carregando Projetos...</PageTitle>
+        </Hero>
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <GlobalStyle />
+        <Header />
+        <Hero>
+          <PageTitle>Erro ao carregar projetos</PageTitle>
+          <div style={{ textAlign: 'center', maxWidth: '600px', margin: '0 auto' }}>
+            <p>{error}</p>
+            <p style={{ fontSize: '0.9rem', color: '#666' }}>{errorDetails}</p>
+            {responseText && (
+              <div style={{ marginTop: '20px', textAlign: 'left', maxHeight: '200px', overflow: 'auto', background: '#f5f5f5', padding: '10px', borderRadius: '5px' }}>
+                <p style={{ fontWeight: 'bold' }}>Response received:</p>
+                <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+                  {responseText.substring(0, 500)}
+                  {responseText.length > 500 ? '...' : ''}
+                </pre>
+              </div>
+            )}
+            <p style={{ marginTop: '20px' }}>
+              Verifique se o arquivo info.json está disponível no bucket S3 do Amplify.
+            </p>
+          </div>
+        </Hero>
+      </>
+    );
+  }
+
+  const projectsToDisplay = projects.map((project, index) => {
+    // Remove leading slash if present and get directory name
+    const directory = project.dir.replace(/^\//, '');
+    
+    // Create an array of 3 image URLs for this project
+    const previewImages = [0, 1, 2].map(imgIndex => 
+      `http://15.228.252.194:5000/api/files/image/${directory}/${imgIndex}`
+    );
+    
+    return {
+      title: directory,
+      description: `Projeto de ${project.owner}`,
+      imageUrls: previewImages, // Array of image URLs for the collage
+      linkTo: `/projects${project.dir}`,
+      linkText: "Ver Projeto",
+      owner: project.owner,
+      users: project.users
+    };
+  });
 
   return (
     <>
@@ -190,16 +363,22 @@ function App() {
           </motion.main>
 
           <ProjectsContainer>
-            {projects.map((project, index) => (
-              <ProjectCard
-                key={`project-${index}`}
-                title={project.title}
-                description={project.description}
-                imageUrl={project.imageUrl}
-                linkTo={project.linkTo}
-                linkText={project.linkText}
-              />
-            ))}
+            {projectsToDisplay.length > 0 ? (
+              projectsToDisplay.map((project, index) => (
+                <ProjectCard
+                  key={`project-${index}`}
+                  title={project.title}
+                  description={project.description}
+                  imageUrls={project.imageUrls} // Pass all image URLs to ProjectCard
+                  linkTo={project.linkTo}
+                  linkText={project.linkText}
+                  owner={project.owner}
+                  users={project.users}
+                />
+              ))
+            ) : (
+              <p>Nenhum projeto encontrado.</p>
+            )}
           </ProjectsContainer>
         </motion.div>
       </AnimatePresence>

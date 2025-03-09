@@ -49,7 +49,7 @@
         "IdentityPoolName": "testAuthIdentityPool__prod",
         "UserPoolName": "VisualizingGCNsapp"
       },
-      "lastPushTimeStamp": "2025-03-08T17:15:33.248Z",
+      "lastPushTimeStamp": "2025-03-08T18:48:30.648Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-visualizinggcnsapp-prod-192454-deployment/amplify-cfn-templates/auth/VisualizingGCNsapp-cloudformation-template.json",
         "logicalId": "authVisualizingGCNsapp"
@@ -62,7 +62,7 @@
       "service": "S3",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
-      "lastPushTimeStamp": "2025-03-08T17:15:33.502Z",
+      "lastPushTimeStamp": "2025-03-08T18:48:30.858Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-visualizinggcnsapp-prod-192454-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
         "logicalId": "storages3visualizinggcnsappstorage"

@@ -39,7 +39,9 @@
             "handlelistnullabilitytransparently": true,
             "emitauthprovider": true,
             "generateindexrules": true,
-            "enabledartnullsafety": true
+            "enabledartnullsafety": true,
+            "useExperimentalPipelinedTransformer": false,
+            "generateModels": true
         },
         "appsync": {
             "generategraphqlpermissions": true
@@ -54,6 +56,12 @@
         },
         "project": {
             "overrides": true
+        },
+        "codegen-typescript": {
+            "generateTypeHelpers": true
+        },
+        "export": {
+            "format": "commonjs"
         }
     },
     "debug": {
