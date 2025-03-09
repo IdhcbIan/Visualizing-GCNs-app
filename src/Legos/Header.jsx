@@ -146,7 +146,7 @@ function Header() {
     >
       <NavLinks>
         <StyledLink to="/sobre">Sobre</StyledLink>
-        <StyledLink to="/test">Demo</StyledLink>
+        <StyledLink to="/demo">Demo</StyledLink>
       </NavLinks>
       <Link to="/">
         <Logo 

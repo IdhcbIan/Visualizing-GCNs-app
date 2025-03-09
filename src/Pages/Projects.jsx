@@ -317,7 +317,7 @@ function App() {
       title: directory,
       description: `Projeto de ${project.owner}`,
       imageUrls: previewImages, // Array of image URLs for the collage
-      linkTo: `/projects${project.dir}`,
+      linkTo: `/project?project=${directory}`, // Changed to match the Project component route
       linkText: "Ver Projeto",
       owner: project.owner,
       users: project.users

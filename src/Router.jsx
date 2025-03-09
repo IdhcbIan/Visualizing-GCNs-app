@@ -7,6 +7,7 @@ import Renderer from './Pages/Visual/Renderer.jsx'
 import Demo from './Pages/Demo.jsx'
 import Login from './Pages/Login.jsx'
 import Profile from './Auth/Profile.jsx'
+import Project from './Pages/Project/Project.jsx'
 
 // Import Amplify
 import { Amplify } from 'aws-amplify'
@@ -51,6 +52,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/visual" element={<Renderer />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/project" element={<Project />} />
         </Routes>
       </BrowserRouter>
     </Authenticator.Provider>
