@@ -10,22 +10,20 @@ const Renderer = () => {
   
   useEffect(() => {
     // Load data from rks.txt
-    fetch('/rks.txt')
+    fetch('/resnet152_output.json')
       .then(response => {
         if (!response.ok) {
           throw new Error('Failed to load data file');
         }
-        return response.text();
+        return response.json();
       })
-      .then(text => {
-        // Parse the text file content
-        const parsedData = parseRksFile(text);
-        setKnnData(parsedData);
+      .then(data => {
+        setKnnData(data);
         
         // Set the maximum K value based on the number of elements
         // Subtract 1 because we don't count the node itself
-        if (parsedData.length > 0) {
-          setMaxK(Math.max(10, parsedData.length - 1));
+        if (data.length > 0) {
+          setMaxK(Math.max(10, data.length - 1));
         }
         
         setLoading(false);
@@ -36,44 +34,6 @@ const Renderer = () => {
         setLoading(false);
       });
   }, []);
-
-  // Function to parse the rks.txt file
-  const parseRksFile = (fileContent) => {
-    try {
-      // Check if the file is in JSON format
-      if (fileContent.trim().startsWith('[')) {
-        console.log("Detected JSON format, attempting to parse...");
-        const jsonData = JSON.parse(fileContent);
-        console.log("JSON parsing successful, found", jsonData.length, "items");
-        return jsonData;
-      }
-      
-      // Otherwise parse as space-separated values
-      console.log("Parsing as space-separated values...");
-      const lines = fileContent.trim().split('\n');
-      const rankings = [];
-      
-      // Process each line
-      for (const line of lines) {
-        // Skip empty lines or comments
-        if (!line.trim() || line.trim().startsWith('#')) continue;
-        
-        // Split the line by spaces or tabs and convert to numbers
-        const values = line.trim().split(/\s+/).map(val => parseInt(val, 10));
-        
-        // Add to rankings array
-        if (values.length > 0) {
-          rankings.push(values);
-        }
-      }
-      
-      console.log("Parsed", rankings.length, "rankings");
-      return rankings;
-    } catch (error) {
-      console.error("Error parsing file:", error);
-      return [];
-    }
-  };
 
   const handleKChange = (e) => {
     // Allow empty input temporarily
@@ -186,4 +146,4 @@ const Renderer = () => {
   );
 };
 
-export default Renderer; 
+export default Renderer;

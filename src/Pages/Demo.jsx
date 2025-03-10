@@ -103,7 +103,7 @@ const Demo = () => {
           <Header />
           
           <VisualizationSection>
-            <SectionTitle>Interactive Graph Visualization(AlexNet)</SectionTitle>
+            <SectionTitle>Interactive Graph Visualization(ResNet152)</SectionTitle>
             <Renderer />
           </VisualizationSection>
           

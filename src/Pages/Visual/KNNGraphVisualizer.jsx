@@ -126,16 +126,16 @@ const KNNGraphVisualizer = ({ data, k = 5, zoom = 1 }) => {
       linksCreated: links.length
     }));
 
-    // Set up force simulation
+    // Set up force simulation with increased clustering parameters
     const simulation = d3.forceSimulation(nodes)
-      .force("link", d3.forceLink(links).id(d => d.id).distance(300))
-      .force("charge", d3.forceManyBody().strength(-300))
-      .force("center", d3.forceCenter(innerWidth / 2, innerHeight / 2))
-      .force("collision", d3.forceCollide().radius(20))
+      .force("link", d3.forceLink(links).id(d => d.id).distance(100)) // Even shorter distance for tighter clusters
+      .force("charge", d3.forceManyBody().strength(-2000)) // Much stronger repulsion
+      .force("center", d3.forceCenter(innerWidth / 2, innerHeight / 2).strength(0.4)) // Increased centering force
+      .force("collision", d3.forceCollide().radius(35)) // Increased collision radius
       .stop(); // Stop the simulation immediately
 
     // Run the simulation for a fixed number of iterations
-    simulation.tick(150); // Reduce the number of ticks
+    simulation.tick(200); // Increased number of ticks for better settling
 
     // Draw links
     const link = g.append("g")
@@ -143,7 +143,7 @@ const KNNGraphVisualizer = ({ data, k = 5, zoom = 1 }) => {
       .selectAll("line")
       .data(links)
       .enter().append("line")
-      .attr("stroke-width", d => Math.sqrt(d.value) * 2)
+      .attr("stroke-width", d => Math.sqrt(d.value) * 3) // Thicker lines
       .attr("stroke", "#999")
       .attr("stroke-opacity", 0.6);
 
